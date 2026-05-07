@@ -26,7 +26,7 @@ interface Props {
 const {
   title,
   description,
-  image = '/images/wp/2025/10/Microvista-Industrieller-CT-Container-Truck-ScanExpress-4K-1024x576.jpg',
+  image = '/images/wp/2025/10/Microvista-Industrieller-CT-Container-Truck-ScanExpress-4K-1536x864.jpg',
   canonicalUrl,
   noindex = false,
   type = 'website',
@@ -37,7 +37,11 @@ const {
 
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://microvista.de';
 const canonical = canonicalUrl || new URL(Astro.url.pathname, siteUrl).toString();
-const ogImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
+// og:image und og:url an Request-Origin binden, damit Vorschau auch auf pages.dev funktioniert
+// (microvista.de DNS noch nicht umgesetzt, sonst zeigt og:image auf alte WP-Site und Crawler scheitern)
+const requestOrigin = Astro.url.origin;
+const ogUrl = new URL(Astro.url.pathname, requestOrigin).toString();
+const ogImage = image.startsWith('http') ? image : `${requestOrigin}${image}`;
 const locale = resolveLocale(Astro.locals.locale);
 
 // Hreflang URLs nur für aktivierte Sprachen
@@ -61,10 +65,13 @@ const xDefaultHref = locales[defaultLocale] || `${siteUrl}${currentPath}`;
 
 <!-- Open Graph -->
 <meta property="og:type" content={type} />
-<meta property="og:url" content={canonical} />
+<meta property="og:url" content={ogUrl} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1536" />
+<meta property="og:image:height" content="864" />
+<meta property="og:image:alt" content="Microvista Industrieller CT-Container ScanExpress" />
 <meta property="og:locale" content={{
   de: 'de_DE',
   en: 'en_US',
