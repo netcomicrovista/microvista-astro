@@ -32,6 +32,8 @@ const content = {
         note: 'Scan innerhalb von 24h möglich – nur mit Absprache & abhängig von der Teileanzahl',
         href: '/serie',
         btnLabel: 'Zur Serienprüfung',
+        image: '/images/wp/2022/08/Ablauf-einer-Serienprufung-mit-industrieller-CT.webp',
+        imageAlt: 'Ablauf einer Serienprüfung mit industrieller CT – Prozess-Diagramm',
       },
       {
         tag: 'Bemusterung',
@@ -41,6 +43,8 @@ const content = {
         note: 'Durchlaufzeit nach Absprache – in der Regel < 3 Tage für Standardaufgaben',
         href: '/labor/erstmusterpruefung',
         btnLabel: 'Zur Erstmusterprüfung',
+        image: '/images/wp/2022/08/Ablauf-einer-Bemusterung-mit-industrieller-CT.webp',
+        imageAlt: 'Ablauf einer Bemusterung mit industrieller CT – Prozess-Diagramm',
       },
     ],
     servicesTitle: 'Unsere Laborleistungen',
@@ -100,6 +104,8 @@ const content = {
         note: 'Scan within 24h possible – by appointment & depending on part count',
         href: '/serie',
         btnLabel: 'To Series Inspection',
+        image: '/images/wp/2022/08/Ablauf-einer-Serienprufung-mit-industrieller-CT.webp',
+        imageAlt: 'Process flow of series inspection with industrial CT',
       },
       {
         tag: 'First Article',
@@ -109,6 +115,8 @@ const content = {
         note: 'Lead time by agreement – typically < 3 days for standard tasks',
         href: '/labor/erstmusterpruefung',
         btnLabel: 'To First Article Inspection',
+        image: '/images/wp/2022/08/Ablauf-einer-Bemusterung-mit-industrieller-CT.webp',
+        imageAlt: 'Process flow of first article inspection with industrial CT',
       },
     ],
     servicesTitle: 'Our Lab Services',
@@ -238,6 +246,11 @@ const serviceHrefs = [
       <div class="ablauf-grid">
         {t.ablauf.map((item: any) => (
           <div class="ablauf-card">
+            {item.image && (
+              <div class="ablauf-image">
+                <img src={item.image} alt={item.imageAlt} loading="lazy" decoding="async" />
+              </div>
+            )}
             <div class="ablauf-card-header">
               <span class="ablauf-tag">{item.tag}</span>
               <span class="ablauf-icon" aria-hidden="true">{item.icon}</span>
@@ -699,6 +712,24 @@ const serviceHrefs = [
     right: 0;
     height: 4px;
     background: var(--accent);
+    z-index: 1;
+  }
+
+  .ablauf-image {
+    margin: calc(var(--space-8) * -1) calc(var(--space-8) * -1) 0;
+    background: #ffffff;
+    border-bottom: 1px solid var(--border);
+    padding: var(--space-6) var(--space-4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .ablauf-image img {
+    display: block;
+    width: 100%;
+    max-width: 360px;
+    height: auto;
   }
 
   .ablauf-card-header {
