@@ -1,7 +1,8 @@
 ---
 /**
- * Globaler Header - Wird auf allen Seiten angezeigt
- * Responsive Navigation mit Mobile Menu - 5 Sprachen
+ * Globaler Header — Signal Hub Navigation (Konzept G)
+ * Search-First Header + Problem-orientiertes Mega-Panel
+ * 5 Sprachen DE/EN/FR/ES/IT, Mobile responsive, World-Bar Sub-Nav
  */
 import {
   translations,
@@ -19,14 +20,196 @@ interface Props {
 
 const { theme = 'light', world } = Astro.props;
 const locale = (Astro.locals.locale || 'de') as Locale;
-
 const lp = (path: string) => localePath(path, locale);
-
 const nav = translations.nav;
-const laborNav = translations.laborNav;
-const serieNav = translations.serieNav;
 
-// Kontext-Leiste: Labor- und Serie-spezifische Sub-Links
+// ──────────────── Trigger-Labels ────────────────
+const triggers = {
+  leistungen: { de: 'Leistungen', en: 'Services', fr: 'Services', es: 'Servicios', it: 'Servizi' },
+  branchen:   { de: 'Branchen',   en: 'Industries', fr: 'Secteurs', es: 'Sectores', it: 'Settori' },
+  wissen:     { de: 'Wissen',     en: 'Knowledge', fr: 'Savoir', es: 'Conocimiento', it: 'Conoscenza' },
+};
+
+// ──────────────── Command-Trigger ────────────────
+const cmdLabel = {
+  de: 'Problem, Verfahren oder Branche suchen',
+  en: 'Search problem, method or industry',
+  fr: 'Rechercher problème, procédé ou secteur',
+  es: 'Buscar problema, proceso o sector',
+  it: 'Cerca problema, processo o settore',
+};
+const cmdSub = {
+  de: 'Schnell finden — von Hairpin bis Porosität.',
+  en: 'Find fast — from hairpin to porosity.',
+  fr: 'Trouvez vite — du hairpin à la porosité.',
+  es: 'Encuentre rápido — de hairpin a porosidad.',
+  it: 'Trova rapido — da hairpin a porosità.',
+};
+
+// ──────────────── Panel: Leistungen ────────────────
+const leistungenPanel = {
+  kicker: { de: 'Problem-first', en: 'Problem-first', fr: 'Problem-first', es: 'Problem-first', it: 'Problem-first' },
+  headline: {
+    de: 'Start bei Ihrer Prüfaufgabe — nicht bei der Menüstruktur.',
+    en: 'Start with your inspection task — not the menu structure.',
+    fr: 'Commencez par votre tâche d\'inspection — pas la structure du menu.',
+    es: 'Empiece por su tarea de inspección — no por la estructura del menú.',
+    it: 'Inizia dal tuo compito di ispezione — non dalla struttura del menu.',
+  },
+  tiles: [
+    {
+      id: 'Signal 01',
+      tone: 'labor',
+      badge: { de: 'Labor', en: 'Lab', fr: 'Labo', es: 'Lab', it: 'Lab' },
+      title: { de: 'Neues Bauteil freigeben?', en: 'Release a new part?', fr: 'Valider une nouvelle pièce ?', es: '¿Validar una pieza nueva?', it: 'Rilasciare un nuovo pezzo?' },
+      desc: {
+        de: 'Vom ersten Scan bis zum Erstmusterprüfbericht.',
+        en: 'From first scan to first article inspection report.',
+        fr: 'Du premier scan au rapport de premier article.',
+        es: 'Del primer escaneo al informe de primera muestra.',
+        it: 'Dal primo scan al rapporto primo campione.',
+      },
+      tags: ['EMPB', 'CAD Soll-Ist', 'Reverse Engineering'],
+      href: '/labor/erstmusterpruefung',
+    },
+    {
+      id: 'Signal 02',
+      tone: 'serie',
+      badge: { de: 'Serie', en: 'Series', fr: 'Série', es: 'Serie', it: 'Serie' },
+      title: { de: 'Serienqualität absichern?', en: 'Secure series quality?', fr: 'Sécuriser la qualité série ?', es: '¿Asegurar la calidad en serie?', it: 'Garantire la qualità in serie?' },
+      desc: {
+        de: 'Inline-CT, 100%-Prüfung, KI-Auswertung — Stückzahlen sicher prüfen.',
+        en: 'Inline CT, 100% inspection, AI analysis — inspect high volumes.',
+        fr: 'CT en ligne, contrôle 100%, analyse IA — pour gros volumes.',
+        es: 'CT en línea, inspección 100%, análisis IA — para grandes volúmenes.',
+        it: 'CT in linea, ispezione 100%, analisi AI — per grandi volumi.',
+      },
+      tags: ['Inline-CT', '100% Prüfung', 'KI'],
+      href: '/serie/inline-ct',
+    },
+    {
+      id: 'Signal 03',
+      tone: 'express',
+      badge: { de: 'Express', en: 'Express', fr: 'Express', es: 'Express', it: 'Express' },
+      title: { de: 'Reklamation oder Chargensperre?', en: 'Complaint or batch lock?', fr: 'Réclamation ou lot bloqué ?', es: '¿Reclamación o lote bloqueado?', it: 'Reclamo o lotto bloccato?' },
+      desc: {
+        de: 'Ursachenanalyse, Tempo, klarer Kontaktpfad.',
+        en: 'Root cause analysis, fast turnaround, clear contact path.',
+        fr: 'Analyse des causes, rapidité, contact direct.',
+        es: 'Análisis de causa, rapidez, contacto directo.',
+        it: 'Analisi delle cause, rapidità, contatto diretto.',
+      },
+      tags: ['Schadensanalyse', 'Defektanalyse', 'Express CT'],
+      href: '/labor/schadensanalyse',
+    },
+    {
+      id: 'Signal 04',
+      tone: 'wissen',
+      badge: { de: 'Software', en: 'Software', fr: 'Logiciel', es: 'Software', it: 'Software' },
+      title: { de: 'Auswertung automatisieren?', en: 'Automate evaluation?', fr: 'Automatiser l\'analyse ?', es: '¿Automatizar la evaluación?', it: 'Automatizzare l\'analisi?' },
+      desc: {
+        de: 'InspectVista — 5× schneller, 10× höhere Auflösung, Cloud oder On-Prem.',
+        en: 'InspectVista — 5× faster, 10× higher resolution, cloud or on-prem.',
+        fr: 'InspectVista — 5× plus rapide, 10× plus résolu, cloud ou on-prem.',
+        es: 'InspectVista — 5× más rápido, 10× más resolución, cloud u on-prem.',
+        it: 'InspectVista — 5× più veloce, 10× più risoluzione, cloud o on-prem.',
+      },
+      tags: ['InspectVista', 'Cloud', 'KI-Auswertung'],
+      href: '/software',
+    },
+  ],
+  sideTitle: { de: 'Direkt einsteigen', en: 'Direct entry', fr: 'Entrée directe', es: 'Entrada directa', it: 'Entrata diretta' },
+  sideLinks: [
+    { label: { de: 'Labor & Erstmuster', en: 'Lab & First Article', fr: 'Labo & Premier article', es: 'Lab & Primera muestra', it: 'Lab & Primo campione' }, href: '/labor' },
+    { label: { de: 'Serienprüfung',     en: 'Series Inspection', fr: 'Inspection série', es: 'Inspección en serie', it: 'Ispezione in serie' }, href: '/serie' },
+    { label: { de: 'InspectVista Software', en: 'InspectVista Software', fr: 'Logiciel InspectVista', es: 'Software InspectVista', it: 'Software InspectVista' }, href: '/software' },
+    { label: { de: 'Express-Inspektion', en: 'Express Inspection', fr: 'Inspection express', es: 'Inspección exprés', it: 'Ispezione express' }, href: '/express-ct-inspektion' },
+  ],
+};
+
+// ──────────────── Panel: Branchen ────────────────
+const branchenPanel = {
+  kicker: { de: 'Industry layer', en: 'Industry layer', fr: 'Industry layer', es: 'Industry layer', it: 'Industry layer' },
+  headline: {
+    de: 'Branchen sichtbar — verbunden mit Problemen und Wissen.',
+    en: 'Industries visible — connected with problems and knowledge.',
+    fr: 'Secteurs visibles — connectés aux problèmes et au savoir.',
+    es: 'Sectores visibles — conectados con problemas y conocimiento.',
+    it: 'Settori visibili — collegati a problemi e conoscenza.',
+  },
+  tiles: [
+    { id: 'A', tone: 'serie', badge: { de: 'Serie', en: 'Series', fr: 'Série', es: 'Serie', it: 'Serie' }, title: { de: 'Automotive', en: 'Automotive', fr: 'Automobile', es: 'Automoción', it: 'Automotive' }, desc: { de: 'Hairpin-Statoren, Leichtmetallguss, Serienqualität.', en: 'Hairpin stators, light-metal casting, series quality.', fr: 'Hairpins, fonderie aluminium, qualité série.', es: 'Hairpin, fundición ligera, calidad serie.', it: 'Hairpin, fonderia leggera, qualità serie.' }, tags: ['Hairpin', 'Leichtmetallguss'], href: '/branchen/automotive' },
+    { id: 'B', tone: 'serie', badge: { de: 'Serie', en: 'Series', fr: 'Série', es: 'Serie', it: 'Serie' }, title: { de: 'E-Mobilität', en: 'E-Mobility', fr: 'E-mobilité', es: 'E-movilidad', it: 'E-mobility' }, desc: { de: 'Batteriemodule, Schweißungen, E-Motor-Komponenten.', en: 'Battery modules, welds, e-motor components.', fr: 'Modules batterie, soudures, composants moteur.', es: 'Módulos batería, soldaduras, componentes motor.', it: 'Moduli batteria, saldature, componenti motore.' }, tags: ['Batterie', 'Schweißung'], href: '/branchen/e-mobilitaet' },
+    { id: 'C', tone: 'labor', badge: { de: 'Labor', en: 'Lab', fr: 'Labo', es: 'Lab', it: 'Lab' }, title: { de: 'Medizintechnik', en: 'Medical Devices', fr: 'Dispositifs médicaux', es: 'Dispositivos médicos', it: 'Dispositivi medici' }, desc: { de: 'Implantate, Pharma-Verpackung, Dokumentation.', en: 'Implants, pharma packaging, documentation.', fr: 'Implants, emballage pharma, documentation.', es: 'Implantes, embalaje farma, documentación.', it: 'Impianti, packaging farma, documentazione.' }, tags: ['MDR', 'ISO 13485'], href: '/branchen/medizintechnik' },
+    { id: 'D', tone: 'wissen', badge: { de: 'Hybrid', en: 'Hybrid', fr: 'Hybride', es: 'Híbrido', it: 'Ibrido' }, title: { de: 'Additive Fertigung', en: 'Additive Manufacturing', fr: 'Fabrication additive', es: 'Fabricación aditiva', it: 'Manifattura additiva' }, desc: { de: 'Porosität, Innenstruktur, Parameter-Optimierung.', en: 'Porosity, internal structure, parameter optimization.', fr: 'Porosité, structure interne, optimisation des paramètres.', es: 'Porosidad, estructura interna, optimización.', it: 'Porosità, struttura interna, ottimizzazione.' }, tags: ['Porosität', '3D-Druck'], href: '/branchen/additive-fertigung' },
+  ],
+  sideTitle: { de: 'Mehr Branchen', en: 'More Industries', fr: 'Plus de secteurs', es: 'Más sectores', it: 'Altri settori' },
+  sideLinks: [
+    { label: { de: 'Alle 14 Branchen', en: 'All 14 industries', fr: 'Tous les 14 secteurs', es: 'Los 14 sectores', it: 'Tutti i 14 settori' }, href: '/branchen' },
+    { label: { de: 'Luftfahrt', en: 'Aerospace', fr: 'Aéronautique', es: 'Aeroespacial', it: 'Aerospazio' }, href: '/branchen/luftfahrt' },
+    { label: { de: 'Werkstoffprüfung', en: 'NDT/Materials', fr: 'CND/Matériaux', es: 'END/Materiales', it: 'CND/Materiali' }, href: '/branchen/werkstoffpruefung' },
+    { label: { de: 'Forschung & Entwicklung', en: 'R&D', fr: 'R&D', es: 'I+D', it: 'R&S' }, href: '/branchen/forschung-entwicklung' },
+  ],
+};
+
+// ──────────────── Panel: Wissen ────────────────
+const wissenPanel = {
+  kicker: { de: 'Knowledge layer', en: 'Knowledge layer', fr: 'Knowledge layer', es: 'Knowledge layer', it: 'Knowledge layer' },
+  headline: {
+    de: 'Wissen ist Teil der Navigation, nicht Anhang.',
+    en: 'Knowledge is part of navigation, not an appendix.',
+    fr: 'Le savoir fait partie de la navigation, pas un appendice.',
+    es: 'El conocimiento forma parte de la navegación.',
+    it: 'La conoscenza fa parte della navigazione.',
+  },
+  tiles: [
+    {
+      id: 'Wiki',
+      tone: 'wissen',
+      badge: { de: 'Wiki', en: 'Wiki', fr: 'Wiki', es: 'Wiki', it: 'Wiki' },
+      title: { de: 'CT-Wiki', en: 'CT Wiki', fr: 'Wiki CT', es: 'Wiki CT', it: 'Wiki CT' },
+      desc: {
+        de: 'Begriffe schnell erklärt — Porosität, APQP, CAD Soll-Ist und mehr.',
+        en: 'Terms explained fast — porosity, APQP, CAD comparison and more.',
+        fr: 'Termes expliqués rapidement — porosité, APQP, CAO et plus.',
+        es: 'Términos explicados rápido — porosidad, APQP, CAD y más.',
+        it: 'Termini spiegati veloce — porosità, APQP, CAD e altro.',
+      },
+      tags: ['Definitionen', 'A-Z'],
+      href: '/wiki',
+    },
+    {
+      id: 'Magazin',
+      tone: 'wissen',
+      badge: { de: 'Magazin', en: 'Magazine', fr: 'Magazine', es: 'Revista', it: 'Magazine' },
+      title: { de: 'Magazin & Case Studies', en: 'Magazine & Case Studies', fr: 'Magazine & études de cas', es: 'Revista & casos prácticos', it: 'Magazine & case study' },
+      desc: {
+        de: 'Praxisartikel, Marktanalysen, Hairpin-Stator-Scans, Trends 2026.',
+        en: 'Practical articles, market analyses, hairpin scans, trends 2026.',
+        fr: 'Articles pratiques, analyses, hairpin, tendances 2026.',
+        es: 'Artículos prácticos, análisis, hairpin, tendencias 2026.',
+        it: 'Articoli pratici, analisi, hairpin, trend 2026.',
+      },
+      tags: ['Case Study', 'Trends'],
+      href: '/magazin',
+    },
+  ],
+  sideTitle: { de: 'Mehr Ressourcen', en: 'More Resources', fr: 'Plus de ressources', es: 'Más recursos', it: 'Altre risorse' },
+  sideLinks: [
+    { label: { de: 'Forschung & Entwicklung', en: 'R&D', fr: 'R&D', es: 'I+D', it: 'R&S' }, href: '/forschung-entwicklung' },
+    { label: { de: 'Zertifizierungen', en: 'Certifications', fr: 'Certifications', es: 'Certificaciones', it: 'Certificazioni' }, href: '/zertifizierungen' },
+    { label: { de: 'FAQ', en: 'FAQ', fr: 'FAQ', es: 'FAQ', it: 'FAQ' }, href: '/faq' },
+    { label: { de: 'Fragebogen', en: 'Questionnaire', fr: 'Questionnaire', es: 'Cuestionario', it: 'Questionario' }, href: '/fragebogen' },
+  ],
+};
+
+const allPanels = [
+  { key: 'leistungen', data: leistungenPanel },
+  { key: 'branchen',   data: branchenPanel },
+  { key: 'wissen',     data: wissenPanel },
+];
+
+// ──────────────── World Bar (Sub-Nav für /labor und /serie) ────────────────
 const worldContext = {
   labor: {
     label: { de: 'Labor & Erstmuster', en: 'Lab & First Article', fr: 'Laboratoire', es: 'Laboratorio', it: 'Laboratorio' },
@@ -49,95 +232,128 @@ const worldContext = {
     switchHref: '/labor',
   },
 };
-
 const worldCtx = world ? worldContext[world] : null;
 
 // Aktueller Pfad für Sprachwechsel
 const currentPath = Astro.url.pathname;
-
-// Helper to build language-specific URL preserving current path
-const getLangUrl = (targetLocale: Locale) => {
-  return languageSwitchPath(currentPath, targetLocale);
-};
+const getLangUrl = (targetLocale: Locale) => languageSwitchPath(currentPath, targetLocale);
 ---
 
 <header class:list={['site-header', `theme-${theme}`]}>
   <div class="container">
-    <a href={lp('/')} class="logo" aria-label="Microvista">
-      <img
-        class="logo-image logo-image-light"
-        src="/images/logos/2013-08-microvista_Logo_RGB-7.png"
-        alt="Microvista"
-        width="705"
-        height="399"
-        loading="eager"
-      />
-      <img
-        class="logo-image logo-image-dark"
-        src="/images/logos/2024_08-MV-Logo_weiss.png"
-        alt=""
-        aria-hidden="true"
-        width="705"
-        height="399"
-        loading="eager"
-      />
-    </a>
+    <div class="header-shell">
+      <div class="header-row">
+        <a href={lp('/')} class="brand" aria-label="Microvista">
+          <img class="brand-logo brand-logo-light" src="/images/logos/2013-08-microvista_Logo_RGB-7.png" alt="Microvista" width="705" height="399" loading="eager" />
+          <img class="brand-logo brand-logo-dark" src="/images/logos/2024_08-MV-Logo_weiss.png" alt="" aria-hidden="true" width="705" height="399" loading="eager" />
+        </a>
 
-    <nav class="main-nav" id="main-nav">
-      <ul class="nav-list">
-        <li class="nav-item has-dropdown">
-          <a href={lp('/labor')}>{nav.labor[locale]}</a>
-          <ul class="dropdown">
-            <li><a href={lp('/labor/erstmusterpruefung')}>{laborNav.erstmusterpruefung[locale]}</a></li>
-            <li><a href={lp('/labor/schadensanalyse')}>{laborNav.schadensanalyse[locale]}</a></li>
-            <li><a href={lp('/labor/reverse-engineering')}>{laborNav.reverseEngineering[locale]}</a></li>
-          </ul>
-        </li>
-        <li class="nav-item has-dropdown">
-          <a href={lp('/serie')}>{nav.serie[locale]}</a>
-          <ul class="dropdown">
-            <li><a href={lp('/serie/inline-ct')}>{serieNav.inlineCt[locale]}</a></li>
-            <li><a href={lp('/serie/100-prozent-pruefung')}>{serieNav.hundertProzent[locale]}</a></li>
-            <li><a href={lp('/serie/ki-automatisierung')}>{serieNav.kiAutomatisierung[locale]}</a></li>
-          </ul>
-        </li>
-        <li class="nav-item"><a href={lp('/branchen')}>{nav.branchen[locale]}</a></li>
-        <li class="nav-item"><a href={lp('/software')}>{nav.software[locale]}</a></li>
-        <li class="nav-item"><a href={lp('/magazin')}>{nav.magazin[locale]}</a></li>
-        <li class="nav-item"><a href={lp('/wiki')}>{nav.wiki[locale]}</a></li>
-      </ul>
-    </nav>
-
-    <div class="header-actions">
-      <!-- Language Switcher -->
-      <div class="lang-switch-wrapper">
-        <button class="lang-current" aria-expanded="false" aria-haspopup="true">
-          {locale.toUpperCase()}
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </button>
-        <ul class="lang-dropdown">
-          {enabledLocales.map(l => (
-            <li>
-              <a
-                href={getLangUrl(l)}
-                class:list={[{ active: l === locale }]}
-              >
-                <span class="lang-code">{l.toUpperCase()}</span>
-                <span class="lang-name">{localeNames[l]}</span>
-              </a>
-            </li>
+        <nav class="nav" aria-label="Hauptnavigation">
+          {allPanels.map(p => (
+            <button class="nav-trigger" type="button" data-panel={p.key} aria-expanded="false">
+              {p.data.kicker ? triggers[p.key as keyof typeof triggers][locale] : p.key}
+            </button>
           ))}
-        </ul>
+        </nav>
+
+        <button class="command-trigger" id="command-trigger" type="button" data-panel="leistungen">
+          <span class="command-icon" aria-hidden="true">/</span>
+          <span class="command-copy">
+            <strong>{cmdLabel[locale]}</strong>
+            <span>{cmdSub[locale]}</span>
+          </span>
+          <span class="command-kbd" aria-hidden="true">Ctrl K</span>
+        </button>
+
+        <div class="header-actions">
+          <div class="lang-switch-wrapper">
+            <button class="lang-current" aria-expanded="false" aria-haspopup="true">
+              {locale.toUpperCase()}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <ul class="lang-dropdown">
+              {enabledLocales.map(l => (
+                <li>
+                  <a href={getLangUrl(l)} class:list={[{ active: l === locale }]}>
+                    <span class="lang-code">{l.toUpperCase()}</span>
+                    <span class="lang-name">{localeNames[l]}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <a href={lp('/kontakt')} class="cta-pill">{nav.kontakt[locale]}</a>
+
+          <button class="mobile-menu-toggle" type="button" aria-label="Menü öffnen" aria-expanded="false">
+            <span class="hamburger"></span>
+          </button>
+        </div>
       </div>
 
-      <a href={lp('/kontakt')} class="btn btn-primary btn-sm">{nav.kontakt[locale]}</a>
+      {allPanels.map(p => (
+        <div class="mega-panel" id={`panel-${p.key}`} role="region" aria-hidden="true">
+          <div class="panel-head">
+            <div>
+              <div class="panel-kicker">{p.data.kicker[locale]}</div>
+              <h2>{p.data.headline[locale]}</h2>
+            </div>
+          </div>
 
-      <button class="mobile-menu-toggle" aria-label="Menü öffnen" aria-expanded="false">
-        <span class="hamburger"></span>
-      </button>
+          <div class="panel-grid">
+            <div class="problem-grid">
+              {p.data.tiles.map((tile: any) => (
+                <a class="problem-tile" href={lp(tile.href)}>
+                  <div class="problem-top">
+                    <span class="problem-id">{tile.id}</span>
+                    <span class:list={['problem-badge', `tone-${tile.tone}`]}>{tile.badge[locale]}</span>
+                  </div>
+                  <h3>{tile.title[locale]}</h3>
+                  <p>{tile.desc[locale]}</p>
+                  <div class="tag-row">
+                    {tile.tags.map((t: string) => <span class="tag">{t}</span>)}
+                  </div>
+                </a>
+              ))}
+            </div>
+
+            <div class="panel-side">
+              <div class="side-card">
+                <h3>{p.data.sideTitle[locale]}</h3>
+                <ul class="side-links">
+                  {p.data.sideLinks.map((sl: any) => (
+                    <li><a href={lp(sl.href)}>{sl.label[locale]}<span aria-hidden="true">→</span></a></li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
+  </div>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+    {allPanels.map(p => (
+      <details class="m-panel">
+        <summary>{triggers[p.key as keyof typeof triggers][locale]}</summary>
+        <div class="m-panel-body">
+          {p.data.tiles.map((tile: any) => (
+            <a class="m-tile" href={lp(tile.href)}>
+              <strong>{tile.title[locale]}</strong>
+              <span>{tile.desc[locale]}</span>
+            </a>
+          ))}
+          <div class="m-side">
+            {p.data.sideLinks.map((sl: any) => (
+              <a href={lp(sl.href)}>{sl.label[locale]}</a>
+            ))}
+          </div>
+        </div>
+      </details>
+    ))}
+    <a href={lp('/kontakt')} class="m-cta">{nav.kontakt[locale]}</a>
   </div>
 </header>
 
@@ -165,197 +381,236 @@ const getLangUrl = (targetLocale: Locale) => {
 )}
 
 <style>
+  /* ─── Site Header Wrapper ───────────────────── */
   .site-header {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: var(--background);
-    border-bottom: 1px solid var(--border);
-    padding: var(--space-4) 0;
+    padding: var(--space-3) 0;
+    background: transparent;
+  }
+
+  .site-header.theme-light {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(50, 40, 91, 0.06);
   }
 
   .site-header.theme-transparent {
-    position: absolute;
-    left: 0;
-    right: 0;
     background: transparent;
     border-bottom: none;
   }
 
   .site-header.theme-dark {
-    background: var(--primary);
-    border-bottom-color: rgba(255,255,255,0.1);
+    background: var(--mv-violet);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  .site-header .container {
-    display: flex;
+  /* ─── Header Shell (Signal Hub) ─────────────── */
+  .header-shell {
+    position: relative;
+    padding: 12px 16px;
+    border-radius: 22px;
+    border: 1px solid rgba(50, 40, 91, 0.08);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 18px 48px rgba(50, 40, 91, 0.12);
+  }
+
+  .theme-transparent .header-shell {
+    background: rgba(255, 255, 255, 0.92);
+  }
+
+  .theme-dark .header-shell {
+    background: rgba(50, 40, 91, 0.92);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .header-row {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto;
+    gap: 14px;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--space-8);
   }
 
-  .logo {
+  /* ─── Brand ─────────────────────────────────── */
+  .brand {
     display: inline-flex;
     align-items: center;
-    text-decoration: none;
-    min-height: 40px;
+    min-width: 0;
   }
 
-  .logo-image {
+  .brand-logo {
     display: block;
     width: auto;
-    height: 42px;
+    height: 32px;
   }
 
-  .logo-image-dark {
-    display: none;
-  }
+  .brand-logo-dark { display: none; }
+  .theme-dark .brand-logo-light { display: none; }
+  .theme-dark .brand-logo-dark { display: block; }
 
-  .theme-dark .logo-image-light,
-  .theme-transparent .logo-image-light {
-    display: none;
-  }
-
-  .theme-dark .logo-image-dark,
-  .theme-transparent .logo-image-dark {
-    display: block;
-  }
-
-  .main-nav {
-    flex: 1;
+  /* ─── Nav Triggers ──────────────────────────── */
+  .nav {
     display: flex;
-    justify-content: center;
+    align-items: center;
+    gap: 4px;
   }
 
-  .nav-list {
-    display: flex;
-    gap: var(--space-1);
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .nav-item > a {
-    display: block;
-    padding: var(--space-2) var(--space-4);
-    color: var(--text-muted);
-    text-decoration: none;
+  .nav-trigger {
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--mv-gray-700, #374151);
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.92rem;
     font-weight: 500;
-    border-radius: var(--radius-md);
-    transition: all var(--transition-fast);
+    transition: all 180ms ease;
   }
 
-  .theme-dark .nav-item > a,
-  .theme-transparent .nav-item > a {
-    color: rgba(255,255,255,0.7);
+  .nav-trigger:hover,
+  .nav-trigger.active,
+  .nav-trigger[aria-expanded="true"] {
+    background: rgba(142, 191, 214, 0.18);
+    color: var(--mv-violet);
+    border-color: rgba(142, 191, 214, 0.55);
   }
 
-  .nav-item > a:hover {
-    color: var(--text);
-    background: var(--surface);
+  .theme-dark .nav-trigger {
+    color: rgba(255, 255, 255, 0.78);
   }
 
-  .theme-dark .nav-item > a:hover,
-  .theme-transparent .nav-item > a:hover {
-    color: white;
-    background: rgba(255,255,255,0.1);
+  .theme-dark .nav-trigger:hover,
+  .theme-dark .nav-trigger[aria-expanded="true"] {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
   }
 
-  /* Dropdown */
-  .has-dropdown {
-    position: relative;
+  /* ─── Command Trigger ───────────────────────── */
+  .command-trigger {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(142, 191, 214, 0.7);
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfd 100%);
+    cursor: pointer;
+    text-align: left;
+    transition: box-shadow 180ms ease, transform 180ms ease, border-color 180ms ease;
+    color: var(--mv-violet);
+    font: inherit;
   }
 
-  .dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    min-width: 220px;
-    background: var(--background);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-    padding: var(--space-2);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(8px);
-    transition: all var(--transition-fast);
-    list-style: none;
-    margin: 0;
+  .command-trigger:hover {
+    transform: translateY(-1px);
+    border-color: rgba(0, 160, 210, 0.8);
+    box-shadow: 0 12px 28px rgba(142, 191, 214, 0.24);
   }
 
-  .has-dropdown:hover .dropdown {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+  .command-icon {
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #00a0d2 0%, var(--mv-blue, #8ebfd6) 100%);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
   }
 
-  .dropdown a {
-    display: block;
-    padding: var(--space-2) var(--space-3);
-    color: var(--text-muted);
-    text-decoration: none;
-    border-radius: var(--radius-md);
-    font-size: var(--text-sm);
+  .command-copy {
+    display: grid;
+    gap: 1px;
+    min-width: 0;
+    flex: 1;
   }
 
-  .dropdown a:hover {
-    color: var(--text);
-    background: var(--surface);
+  .command-copy strong {
+    color: var(--mv-violet);
+    font-size: 0.86rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
+  .command-copy span {
+    color: var(--mv-gray-500, #6b7280);
+    font-size: 0.74rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .command-kbd {
+    margin-left: auto;
+    padding: 5px 8px;
+    border-radius: 999px;
+    background: var(--mv-violet);
+    color: #fff;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  /* ─── Header Actions ───────────────────────── */
   .header-actions {
     display: flex;
     align-items: center;
-    gap: var(--space-4);
+    gap: 10px;
   }
 
-  /* Language Switcher */
-  .lang-switch-wrapper {
-    position: relative;
-  }
+  .lang-switch-wrapper { position: relative; }
 
   .lang-current {
     display: flex;
     align-items: center;
-    gap: var(--space-1);
-    padding: var(--space-2) var(--space-3);
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    color: var(--text);
-    font-size: var(--text-sm);
-    font-weight: 500;
+    gap: 4px;
+    padding: 8px 11px;
+    background: #ffffff;
+    border: 1px solid rgba(50, 40, 91, 0.1);
+    border-radius: 999px;
+    color: var(--mv-gray-700, #374151);
+    font-size: 0.78rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: all var(--transition-fast);
+    font-family: inherit;
   }
 
-  .lang-current:hover {
-    border-color: var(--primary);
-  }
+  .lang-current:hover { border-color: var(--mv-blue, #8ebfd6); }
 
-  .theme-dark .lang-current,
-  .theme-transparent .lang-current {
-    border-color: rgba(255,255,255,0.2);
-    color: white;
+  .theme-dark .lang-current {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: #fff;
   }
 
   .lang-dropdown {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 8px);
     right: 0;
-    margin-top: var(--space-2);
     min-width: 160px;
-    background: var(--background);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-    padding: var(--space-2);
+    background: #fff;
+    border: 1px solid rgba(50, 40, 91, 0.08);
+    border-radius: 14px;
+    box-shadow: 0 18px 48px rgba(50, 40, 91, 0.12);
+    padding: 6px;
     list-style: none;
+    margin: 0;
     opacity: 0;
     visibility: hidden;
     transform: translateY(8px);
-    transition: all var(--transition-fast);
+    transition: all 180ms ease;
+    z-index: 50;
   }
 
   .lang-switch-wrapper:hover .lang-dropdown,
@@ -368,48 +623,62 @@ const getLangUrl = (targetLocale: Locale) => {
   .lang-dropdown a {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-2) var(--space-3);
-    color: var(--text-muted);
+    gap: 10px;
+    padding: 8px 10px;
+    color: var(--mv-gray-700, #374151);
     text-decoration: none;
-    border-radius: var(--radius-md);
-    transition: all var(--transition-fast);
+    border-radius: 10px;
+    font-size: 0.85rem;
+    transition: all 120ms ease;
   }
 
   .lang-dropdown a:hover,
   .lang-dropdown a.active {
-    color: var(--text);
-    background: var(--surface);
+    background: var(--mv-blue-soft, #edf6fa);
+    color: var(--mv-violet);
   }
 
-  .lang-dropdown a.active {
-    font-weight: 600;
+  .lang-dropdown a.active { font-weight: 700; }
+
+  .lang-code { font-weight: 700; }
+  .lang-name { color: var(--mv-gray-500, #6b7280); }
+
+  .cta-pill {
+    padding: 9px 16px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--mv-orange, #ee7711) 0%, #ff9a3d 100%);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.86rem;
+    text-decoration: none;
+    box-shadow: 0 14px 26px rgba(238, 119, 17, 0.28);
+    white-space: nowrap;
+    transition: transform 120ms ease, box-shadow 120ms ease;
   }
 
-  .lang-code {
-    font-weight: 600;
-    font-size: var(--text-sm);
-  }
-
-  .lang-name {
-    font-size: var(--text-sm);
-    color: var(--text-muted);
+  .cta-pill:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 18px 32px rgba(238, 119, 17, 0.34);
   }
 
   .mobile-menu-toggle {
     display: none;
-    padding: var(--space-2);
+    width: 40px;
+    height: 40px;
+    padding: 8px;
     background: none;
-    border: none;
+    border: 1px solid rgba(50, 40, 91, 0.1);
+    border-radius: 999px;
     cursor: pointer;
   }
 
   .hamburger {
     display: block;
-    width: 24px;
+    width: 22px;
     height: 2px;
-    background: var(--text);
+    background: var(--mv-violet);
     position: relative;
+    margin: 0 auto;
   }
 
   .hamburger::before,
@@ -421,50 +690,321 @@ const getLangUrl = (targetLocale: Locale) => {
     background: inherit;
     left: 0;
   }
-
   .hamburger::before { top: -7px; }
   .hamburger::after { top: 7px; }
 
   .theme-dark .hamburger,
-  .theme-transparent .hamburger {
-    background: white;
+  .theme-dark .hamburger::before,
+  .theme-dark .hamburger::after { background: #fff; }
+
+  .theme-dark .mobile-menu-toggle { border-color: rgba(255, 255, 255, 0.18); }
+
+  /* ─── Mega Panel ───────────────────────────── */
+  .mega-panel {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    top: calc(100% + 10px);
+    padding: 22px;
+    border-radius: 24px;
+    border: 1px solid rgba(50, 40, 91, 0.08);
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 28px 80px rgba(24, 18, 49, 0.22);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
+    z-index: 60;
   }
 
-  /* Mobile */
-  @media (max-width: 1024px) {
-    .main-nav {
-      display: none;
-    }
-
-    .mobile-menu-toggle {
-      display: block;
-    }
-
-    .header-actions .btn {
-      display: none;
-    }
+  .mega-panel.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
   }
 
-  /* ──────────────────────────────────
-     Welt-Kontext-Leiste
-  ────────────────────────────────── */
+  .panel-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .panel-kicker {
+    color: #00a0d2;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  .panel-head h2 {
+    margin: 0;
+    font-family: 'Antonio', var(--font-heading, sans-serif);
+    font-size: clamp(1.4rem, 2.2vw, 2.1rem);
+    line-height: 1.05;
+    color: var(--mv-violet);
+  }
+
+  .panel-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 14px;
+  }
+
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .problem-tile {
+    display: block;
+    padding: 16px;
+    border-radius: 18px;
+    border: 1px solid rgba(50, 40, 91, 0.08);
+    background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    box-shadow: 0 8px 24px rgba(50, 40, 91, 0.06);
+    text-decoration: none;
+    color: var(--mv-violet);
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  }
+
+  .problem-tile:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 48px rgba(50, 40, 91, 0.12);
+    border-color: rgba(0, 160, 210, 0.35);
+  }
+
+  .problem-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .problem-id {
+    color: var(--mv-gray-500, #6b7280);
+    font-size: 0.74rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .problem-badge,
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 5px 9px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .tone-labor { background: rgba(50, 40, 91, 0.1); color: var(--mv-violet); }
+  .tone-serie { background: rgba(0, 160, 210, 0.12); color: #00a0d2; }
+  .tone-express { background: rgba(238, 119, 17, 0.12); color: var(--mv-orange, #ee7711); }
+  .tone-wissen { background: rgba(142, 191, 214, 0.22); color: #41647f; }
+
+  .problem-tile h3 {
+    margin: 0 0 6px;
+    font-family: 'Antonio', var(--font-heading, sans-serif);
+    font-size: 1.18rem;
+    line-height: 1.1;
+    color: var(--mv-violet);
+  }
+
+  .problem-tile p {
+    margin: 0 0 12px;
+    color: var(--mv-gray-700, #374151);
+    line-height: 1.45;
+    font-size: 0.86rem;
+  }
+
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    background: var(--mv-blue-soft, #edf6fa);
+    color: var(--mv-violet);
+  }
+
+  .panel-side {
+    display: grid;
+    gap: 14px;
+  }
+
+  .side-card {
+    padding: 18px;
+    border-radius: 18px;
+    background: linear-gradient(160deg, var(--mv-violet, #32285b) 0%, #241b46 100%);
+    color: #fff;
+    box-shadow: 0 18px 48px rgba(50, 40, 91, 0.18);
+  }
+
+  .side-card h3 {
+    margin: 0 0 12px;
+    font-family: 'Antonio', var(--font-heading, sans-serif);
+    font-size: 1.2rem;
+    color: #fff;
+  }
+
+  .side-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 4px;
+  }
+
+  .side-links a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 11px;
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.92);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 120ms ease;
+  }
+
+  .side-links a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+
+  .side-links span { color: var(--mv-orange, #ee7711); font-weight: 700; }
+
+  /* ─── Mobile Drawer ─────────────────────────── */
+  .mobile-drawer {
+    display: none;
+    position: fixed;
+    inset: 60px 0 0;
+    background: #fff;
+    z-index: 90;
+    overflow-y: auto;
+    padding: 16px 18px 32px;
+    transform: translateX(100%);
+    transition: transform 220ms ease;
+  }
+
+  .mobile-drawer.open {
+    transform: translateX(0);
+  }
+
+  .m-panel {
+    border-bottom: 1px solid rgba(50, 40, 91, 0.08);
+  }
+
+  .m-panel summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 14px 4px;
+    font-family: 'Antonio', var(--font-heading, sans-serif);
+    font-size: 1.15rem;
+    color: var(--mv-violet);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .m-panel summary::-webkit-details-marker { display: none; }
+  .m-panel summary::after { content: '+'; font-size: 1.4rem; color: var(--mv-orange); }
+  .m-panel[open] summary::after { content: '−'; }
+
+  .m-panel-body {
+    padding: 4px 4px 16px;
+    display: grid;
+    gap: 8px;
+  }
+
+  .m-tile {
+    display: grid;
+    gap: 2px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: var(--mv-blue-soft, #edf6fa);
+    color: var(--mv-violet);
+    text-decoration: none;
+  }
+
+  .m-tile strong { font-size: 0.95rem; }
+  .m-tile span { font-size: 0.8rem; color: var(--mv-gray-700, #374151); }
+
+  .m-side {
+    display: grid;
+    gap: 4px;
+    padding-top: 6px;
+  }
+
+  .m-side a {
+    padding: 8px 12px;
+    color: var(--mv-gray-700, #374151);
+    text-decoration: none;
+    font-size: 0.86rem;
+    border-radius: 8px;
+  }
+
+  .m-side a:hover { background: var(--mv-blue-soft, #edf6fa); color: var(--mv-violet); }
+
+  .m-cta {
+    display: block;
+    margin-top: 18px;
+    padding: 14px;
+    text-align: center;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--mv-orange, #ee7711) 0%, #ff9a3d 100%);
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 14px 26px rgba(238, 119, 17, 0.28);
+  }
+
+  /* ─── Responsive ───────────────────────────── */
+  @media (max-width: 1100px) {
+    .nav { display: none; }
+    .command-trigger { min-width: 0; }
+    .command-copy span { display: none; }
+  }
+
+  @media (max-width: 860px) {
+    .command-trigger,
+    .lang-switch-wrapper { display: none; }
+
+    .mobile-menu-toggle { display: grid; place-items: center; }
+
+    .header-row {
+      grid-template-columns: 1fr auto auto;
+    }
+
+    .mega-panel { display: none; }
+
+    .mobile-drawer { display: block; }
+
+    .cta-pill { display: none; }
+  }
+
+  /* ─── World Bar (Sub-Nav) ──────────────────── */
   :global(.world-bar) {
     position: sticky;
-    top: 73px; /* Höhe des Haupt-Headers */
+    top: 73px;
     z-index: 99;
-    padding: 0 0;
     font-size: var(--text-sm);
     font-family: var(--font-heading);
     border-bottom: 1px solid rgba(255,255,255,0.12);
   }
 
-  :global(.world-bar--labor) {
-    background: var(--mv-violet);
-  }
-
-  :global(.world-bar--serie) {
-    background: var(--mv-gray-900);
-  }
+  :global(.world-bar--labor) { background: var(--mv-violet); }
+  :global(.world-bar--serie) { background: var(--mv-gray-900, #111827); }
 
   :global(.world-bar .container) {
     display: flex;
@@ -550,20 +1090,65 @@ const getLangUrl = (targetLocale: Locale) => {
 </style>
 
 <script>
-  // Mobile menu toggle
-  const toggle = document.querySelector('.mobile-menu-toggle');
-  const nav = document.getElementById('main-nav');
+  // Panel-Toggle
+  const triggers = document.querySelectorAll<HTMLButtonElement>('.nav-trigger, #command-trigger');
+  const panels = document.querySelectorAll<HTMLDivElement>('.mega-panel');
+  const closeAll = () => {
+    panels.forEach(p => { p.classList.remove('open'); p.setAttribute('aria-hidden', 'true'); });
+    document.querySelectorAll<HTMLButtonElement>('.nav-trigger').forEach(b => b.setAttribute('aria-expanded', 'false'));
+  };
 
-  toggle?.addEventListener('click', () => {
-    const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-    toggle.setAttribute('aria-expanded', (!isExpanded).toString());
-    nav?.classList.toggle('is-open');
+  triggers.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const key = btn.getAttribute('data-panel');
+      if (!key) return;
+      const target = document.getElementById(`panel-${key}`);
+      const isOpen = target?.classList.contains('open');
+      closeAll();
+      if (target && !isOpen) {
+        target.classList.add('open');
+        target.setAttribute('aria-hidden', 'false');
+        document.querySelectorAll<HTMLButtonElement>(`.nav-trigger[data-panel="${key}"]`).forEach(b => b.setAttribute('aria-expanded', 'true'));
+      }
+    });
   });
 
-  // Language dropdown
-  const langBtn = document.querySelector('.lang-current');
-  langBtn?.addEventListener('click', () => {
-    const isExpanded = langBtn.getAttribute('aria-expanded') === 'true';
-    langBtn.setAttribute('aria-expanded', (!isExpanded).toString());
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (!target.closest('.header-shell')) closeAll();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
+
+  // Ctrl+K → Leistungen-Panel öffnen
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      const target = document.getElementById('panel-leistungen');
+      const isOpen = target?.classList.contains('open');
+      closeAll();
+      if (target && !isOpen) {
+        target.classList.add('open');
+        target.setAttribute('aria-hidden', 'false');
+      }
+    }
+  });
+
+  // Mobile Drawer
+  const mobileToggle = document.querySelector<HTMLButtonElement>('.mobile-menu-toggle');
+  const drawer = document.getElementById('mobile-drawer');
+  mobileToggle?.addEventListener('click', () => {
+    const open = drawer?.classList.toggle('open');
+    mobileToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    drawer?.setAttribute('aria-hidden', open ? 'false' : 'true');
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+
+  // Language Dropdown
+  const langBtn = document.querySelector<HTMLButtonElement>('.lang-current');
+  langBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const expanded = langBtn.getAttribute('aria-expanded') === 'true';
+    langBtn.setAttribute('aria-expanded', (!expanded).toString());
   });
 </script>
