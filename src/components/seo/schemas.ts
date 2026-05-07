@@ -16,7 +16,7 @@ export const organizationSchema = {
     "height": 399
   },
   "image": "https://microvista.de/images/wp/2025/10/Microvista-Industrieller-CT-Container-Truck-ScanExpress-4K-1024x576.jpg",
-  "description": "Industrielle Computertomographie für Labor und Serie. ISO 9001 und ISO 17025 zertifiziert. Automatisierte CT-Auswertung mit InspectVista.",
+  "description": "Industrielle Computertomographie für Labor und Serie. ISO 9001 zertifiziert, TISAX 27001 in Zertifizierung. Automatisierte CT-Auswertung mit InspectVista.",
   "slogan": "GET YOUR INSPECTION DONE – Anywhere. Anytime. Fast.",
   "address": {
     "@type": "PostalAddress",
@@ -35,7 +35,7 @@ export const organizationSchema = {
   "email": "vertrieb@microvista.de",
   "hasCredential": [
     { "@type": "EducationalOccupationalCredential", "name": "ISO 9001" },
-    { "@type": "EducationalOccupationalCredential", "name": "ISO 17025" }
+    { "@type": "EducationalOccupationalCredential", "name": "TISAX (ISO/IEC 27001)" }
   ],
   "knowsAbout": [
     "Industrielle Computertomographie",

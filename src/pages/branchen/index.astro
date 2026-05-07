@@ -54,7 +54,7 @@ const t = content[locale as keyof typeof content] || content.de;
 const sortedBranchen = branchen.sort((a, b) => a.data.name.localeCompare(b.data.name));
 
 // Trust badges
-const trustBadges = ['ISO 9001', 'ISO 17025', 'NADCAP', 'FDA Ready'];
+const trustBadges = ['ISO 9001', 'TISAX 27001'];
 
 // Stats
 const stats = [
@@ -148,7 +148,7 @@ const stats = [
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="m4.5 10 3.5 3.5 7-7" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                Akkreditiert nach ISO 17025
+                ISO 9001 zertifiziert, TISAX 27001 in Zertifizierung
               </li>
             </ul>
             <a href={lp('/dienstleistungen/scanexpress')} class="feature-cta">

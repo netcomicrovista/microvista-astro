@@ -10,14 +10,14 @@ challenges:
   - title: "Produktentwicklung ohne CT-Feedback: lange Iterationszyklen, hohe Prototypenkosten"
     description: "Ohne CT-gestütztes Feedback im Entwicklungsprozess müssen Konstrukteure Änderungen an Guss-, Sinter- oder Druckparametern blind vornehmen und auf die nächste Bauserie warten. Jeder zusätzliche Iterationszyklus kostet Zeit und Prototypengeld – bei komplexen Bauteilen schnell mehrere Wochen und fünfstellige Beträge. CT nach jedem Entwicklungsschritt macht Prozessauswirkungen sofort sichtbar und verkürzt den Weg zum serienreifen Bauteil erheblich."
   - title: "Normkonforme Prüfberichte für Fördermittelanträge und Publikationen nötig"
-    description: "Forschungseinrichtungen, die CT-Daten in wissenschaftlichen Publikationen oder Fördermittelanträgen verwenden wollen, benötigen Prüfergebnisse aus einem akkreditierten Labor – andernfalls werden Daten von Gutachtern und Fördergebern nicht als valide anerkannt. Die eigene Messung mit nicht-kalibriertem Equipment reicht für zitierfähige Ergebnisse nicht aus. Microvistas ISO 17025-Akkreditierung stellt sicher, dass alle Prüfberichte international anerkannt und publikationsreif sind."
+    description: "Forschungseinrichtungen, die CT-Daten in wissenschaftlichen Publikationen oder Fördermittelanträgen verwenden wollen, benötigen Prüfergebnisse aus einem zertifizierten Qualitätsmanagement – andernfalls werden Daten von Gutachtern und Fördergebern nicht immer als valide anerkannt. Microvista ist nach ISO 9001 zertifiziert und befindet sich in der TISAX-27001-Zertifizierung – damit sind Prüfberichte rückverfolgbar dokumentiert und für Publikationen geeignet."
 solutions:
   - title: "Materialcharakterisierung"
     description: "Microvista analysiert neue Legierungen, Sinterwerkstoffe und Verbundmaterialien auf Porenverteilung, Gefügestruktur und Phasenzusammensetzung in vollständigen 3D-Datensätzen. Das Ergebnis ist eine statistische Auswertung repräsentativer Probenvolumina, die für Werkstoffvergleiche, Prozessoptimierung und Publikationen unmittelbar verwendbar ist. Auf Wunsch liefert Microvista die Rohdaten direkt in die Analyse-Software des Forschungsinstituts."
   - title: "Prototypen-Feedback"
     description: "Microvista analysiert Entwicklungsmuster in der Regel innerhalb von 24 bis 48 Stunden und liefert Befunde zu Geometrieabweichungen, inneren Defekten und Prozessfehlern, die direkt in die nächste Konstruktionsiteration einfließen. Der Express-Turnaround verkürzt Entwicklungszyklen deutlich und macht CT-Feedback zu einem integralen Bestandteil des iterativen Entwicklungsprozesses. Kunden erhalten dabei nicht nur Messdaten, sondern auch eine Einschätzung der möglichen Fehlerursachen."
   - title: "Failure Analysis für Forschung"
-    description: "Microvista erstellt detaillierte 3D-Schadensanalysen an Versagensbauteilen, Ermüdungsproben und beschädigten Materialien für wissenschaftliche Untersuchungen und Normungsarbeiten. Die Prüfberichte sind nach ISO 17025 ausgestellt und damit für Publikationen in referierten Fachzeitschriften sowie für normative Referenzdokumente geeignet. Auf Wunsch werden Befunde gemeinsam mit dem Forschungsteam interpretiert und für die Verwendung in Förderanträgen aufbereitet."
+    description: "Microvista erstellt detaillierte 3D-Schadensanalysen an Versagensbauteilen, Ermüdungsproben und beschädigten Materialien für wissenschaftliche Untersuchungen und Normungsarbeiten. Die Prüfberichte werden nach ISO 9001 zertifiziertem Qualitätsmanagement erstellt und sind damit für Publikationen in referierten Fachzeitschriften sowie für normative Referenzdokumente geeignet. Auf Wunsch werden Befunde gemeinsam mit dem Forschungsteam interpretiert und für die Verwendung in Förderanträgen aufbereitet."
   - title: "Cloud-Rohdaten-Lieferung"
     description: "Microvista liefert CT-Rohdaten direkt über die gesicherte Microvista Cloud in gängigen Volumendatenformaten, die mit VGStudio MAX, Dragonfly, VGMETROLOGY und anderen Analyse-Tools kompatibel sind. Das Institut behält die vollständige Kontrolle über die Datenauswertung und kann eigene Algorithmen auf die Rohdaten anwenden. Die verschlüsselte Cloud-Übertragung stellt sicher, dass vertrauliche Forschungsdaten nicht in fremde Hände gelangen."
 useCases:
@@ -28,8 +28,8 @@ useCases:
 stats:
   - value: "0 €"
     label: "Investitionskosten – Pay-per-scan ohne Eigentum"
-  - value: "ISO 17025"
-    label: "Akkreditiert – zitierbare Prüfergebnisse"
+  - value: "ISO 9001"
+    label: "Zertifiziert + TISAX 27001 in Zertifizierung"
   - value: "24h"
     label: "Express-Turnaround für Forschungsprojekte"
   - value: "RAW"
@@ -42,4 +42,4 @@ cta:
   description: "Kontaktieren Sie uns für CT-Unterstützung Ihrer Forschungs- und Entwicklungsprojekte."
 seo:
   title: "CT-Prüfung für Forschung & Entwicklung – Materialanalyse, Prototypen | Microvista"
-  description: "Industrielle CT für F&E: Materialcharakterisierung, Prototypen-Feedback, Failure Analysis. ISO 17025-akkreditiert. Express-Turnaround für Institute und Entwicklungsabteilungen."
+  description: "Industrielle CT für F&E: Materialcharakterisierung, Prototypen-Feedback, Failure Analysis. ISO 9001 zertifiziert, TISAX 27001 in Zertifizierung. Express-Turnaround für Institute und Entwicklungsabteilungen."

@@ -16,6 +16,10 @@ Die ISO 9001 beweist, dass qualitätsrelevante Prozesse bei Microvista im Mittel
 
 ![ISO-9001-Gepruftes-Qualitatsmanagement](/images/wp/2022/10/ISO-9001-Gepruftes-Qualitatsmanagement-150x150.webp)
 
+## TISAX 27001 — Informationssicherheit (in Zertifizierung)
+
+Microvista arbeitet bereits TISAX-konform nach ISO/IEC 27001 und befindet sich aktuell in der Zertifizierung. TISAX (Trusted Information Security Assessment Exchange) ist der Automotive-Standard für Informationssicherheit, der von OEMs für sensible Entwicklungs- und Produktionsdaten gefordert wird.
+
 ## Mitglied der International Aerospace Quality Group (IAQG)
 
 Dieser internationale gemeinnütziger Verein mit Sitz in Brüssel (Belgien) setzt den Qualitätsstandard innerhalb der weltweiten Lieferkette der Luft- und Raumfahrtindustrie. Mitglieder kommen größtenteils aus der Luft-, Raumfahrt- und Verteidigungsindustrie. Als Mitglied gewinnt Microvista Einblicke in aktuelle Herausforderungen der Branchen.
