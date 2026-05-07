@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
+    "prebuild": "node scripts/generate-search-index.mjs",
     "build": "astro build",
+    "search:index": "node scripts/generate-search-index.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "i18n:inventory": "node scripts/i18n-inventory.mjs",
